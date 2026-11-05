@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Retro Pixel Proposal Letter</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Retro Pixel and Bangla Friendly Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@500;600;700&family=Press+Start+2P&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pixel-dark: #2c1e22;
+      --pink-main: #ff6584;
+      --pink-dark: #e83a63;
+      --gold-bow: #c68a4c;
+      --card-bg: #fffdfa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    body {
+      font-family: 'Hind Siliguri', 'Quicksand', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 50% 40%, #ffffff 0%, #ffe3ea 60%, #ffd0dc 100%);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .font-pixel {
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    /* Pixel art heart clip-path */
+    .pixel-heart {
+      clip-path: polygon(
+        15% 0%, 35% 0%, 50% 15%, 65% 0%, 85% 0%,
+        100% 15%, 100% 50%, 50% 100%, 0% 50%, 0% 15%
+      );
+    }
+
+    /* Ambient background floating hearts */
+    @keyframes floatBgAmbient {
+      0% {
+        transform: translateY(105vh) scale(0.6) rotate(0deg);
+        opacity: 0;
+      }
+      20% { opacity: 0.4; }
+      80% { opacity: 0.45; }
+      100% {
+        transform: translateY(-10vh) scale(1.15) rotate(28deg);
+        opacity: 0;
+      }
+    }
+
+    .bg-heart-particle {
+      position: absolute;
+      background: #ff7f9d;
+      opacity: 0.35;
+      pointer-events: none;
+      animation: floatBgAmbient linear infinite;
+    }
+
+    /* Retro Borders & Drop Shadows */
+    .pixel-border {
+      border: 3.5px solid var(--pixel-dark);
+    }
+
+    .pixel-shadow {
+      box-shadow: 4px 6px 0px var(--pixel-dark);
+    }
+
+    .pixel-shadow-sm {
+      box-shadow: 3px 4px 0px var(--pixel-dark);
+    }
+
+    .pixel-shadow-lg {
+      box-shadow: 6px 9px 0px var(--pixel-dark);
+    }
+
+    /* Wax Seal Heart Impact Animation */
+    @keyframes sealHitPulse {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      35% { transform: translate(-50%, -50%) scale(1.5) rotate(-12deg); background-color: #ff1c54; }
+      70% { transform: translate(-50%, -50%) scale(0.9) rotate(6deg); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .seal-impact {
+      animation: sealHitPulse 0.42s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Retro Proposal Window Transition */
+    .proposal-modal {
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.65) translateY(20px);
+      transition: opacity 0.38s ease, transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0.38s ease;
+    }
+
+    .proposal-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+    }
+
+    /* Pulsing Heart held by Mascot */
+    @keyframes heartBeat {
+      0%, 100% {
+        transform: translateX(-50%) scale(1);
+      }
+      50% {
+        transform: translateX(-50%) scale(1.18);
+      }
+    }
+
+    .cat-heart-pulse {
+      animation: heartBeat 1.2s infinite ease-in-out;
+    }
+
+    /* Idle Mascot Animation */
+    @keyframes catHoverAnim {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .animate-cat-idle {
+      animation: catHoverAnim 1.6s infinite ease-in-out;
+    }
+
+    /* Celebration Heart Burst */
+    @keyframes burstFly {
+      0% {
+        transform: translate(0, 0) scale(0.4) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) scale(var(--scale, 1.2)) rotate(var(--tr, 40deg));
+        opacity: 0;
+      }
+    }
+
+    .confetti-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 100;
+      animation: burstFly 1.4s cubic-bezier(0.1, 0.8, 0.25, 1) forwards;
+    }
+
+    /* Envelope Top Flap */
+    .envelope-top-flap {
+      width: 0;
+      height: 0;
+      border-left: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-top: 72px solid #ffd4df;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.06));
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Background Hearts -->
+  <div id="bgHeartsContainer" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+  <!-- CONTAINER -->
+  <div class="relative z-10 w-full max-w-sm flex flex-col items-center justify-center p-3">
+
+    <!-- 1. ENVELOPE & BOW STAGE -->
+    <div id="gameStage" class="flex flex-col items-center select-none transition-all duration-300 w-full">
+      
+      <!-- Envelope -->
+      <div id="envelopeCard" class="relative w-56 h-36 bg-[#ffffff] pixel-border rounded-xl pixel-shadow flex items-center justify-center overflow-hidden mb-3.5">
+        <!-- Fold Shapes -->
+        <div class="absolute top-0 left-0 w-full flex justify-center z-10 pointer-events-none">
+          <div class="envelope-top-flap"></div>
+        </div>
+        <div class="absolute bottom-0 left-0 w-0 h-0 border-l-[112px] border-l-[#faeaee] border-t-[72px] border-t-transparent pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-0 h-0 border-r-[112px] border-r-[#faeaee] border-t-[72px] border-t-transparent pointer-events-none"></div>
+
+        <!-- Pink Wax Heart Seal -->
+        <div id="sealHeart" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#e83a63] border-2 border-white flex items-center justify-center shadow-lg transition-transform duration-150">
+          <span class="text-white text-base select-none">❤</span>
+        </div>
+      </div>
+
+      <!-- Envelope Label -->
+      <div class="flex items-center gap-1.5 px-4 py-1.5 bg-white/95 rounded-full pixel-border pixel-shadow-sm mb-4 text-center">
+        <span class="font-bold text-[13px] sm:text-[14px] text-[#4b353b]">
+          অর্পিতা , তোর জন্য একটা সারপ্রাইজ আছে! 🎁✨
+        </span>
+      </div>
+
+      <!-- Interactive Cupid's Bow and Arrow Rig -->
+      <div id="bowRig" class="relative w-48 h-28 flex flex-col items-center justify-start touch-none cursor-grab active:cursor-grabbing">
+        
+        <!-- Curved Bow SVG -->
+        <svg id="bowSvg" class="w-36 h-20 absolute top-1 pointer-events-none overflow-visible" viewBox="0 0 120 45">
+          <defs>
+            <linearGradient id="bowGoldGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#b87b38"/>
+              <stop offset="50%" stop-color="#e8af6b"/>
+              <stop offset="100%" stop-color="#b87b38"/>
+            </linearGradient>
+          </defs>
+          <!-- Wood Arc -->
+          <path d="M 12,32 Q 60,-10 108,32" fill="none" stroke="url(#bowGoldGrad)" stroke-width="5.5" stroke-linecap="round" />
+          <path d="M 12,32 Q 60,-10 108,32" fill="none" stroke="#2c1e22" stroke-width="1.5" stroke-linecap="round" opacity="0.4" />
+          
+          <!-- Dynamic Bowstring (curves with drag) -->
+          <path id="bowStringPath" d="M 12,32 Q 60,32 108,32" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.2))" />
+        </svg>
+
+        <!-- Pullable Heart Arrow Wrapper -->
+        <div id="arrowWrapper" class="absolute top-0 w-8 h-18 flex flex-col items-center z-10">
+          <svg class="w-8 h-16 drop-shadow-md overflow-visible" viewBox="0 0 32 64">
+            <!-- Heart Tip -->
+            <path d="M 16,0 C 21,-5 31,1 27,11 L 16,21 L 5,11 C 1,1 11,-5 16,0 Z" fill="#e83a63" stroke="#2c1e22" stroke-width="1.2"/>
+            <!-- Shaft -->
+            <rect x="14.5" y="18" width="3" height="40" fill="#c68a4c" rx="1.5"/>
+            <!-- Feathers -->
+            <path d="M 8,56 L 16,46 L 24,56 L 22,62 L 16,54 L 10,62 Z" fill="#ff7597"/>
+          </svg>
+        </div>
+
+        <!-- Pull Hint Indicator -->
+        <div id="pullGuide" class="absolute top-11 flex flex-col items-center pointer-events-none transition-opacity duration-200">
+          <span class="text-xs text-[#a06674] font-bold animate-bounce">↓ তীরটি নিচে টানো ↓</span>
+        </div>
+      </div>
+
+      <!-- Text Instructions -->
+      <p class="font-semibold text-[12px] text-[#6d4f58] text-center mt-2 leading-relaxed tracking-tight">
+        তীরটি নিচের দিকে টেনে ধরে রাখো<br>
+        <span class="text-[#e83a63] font-bold">— তারপর ছেড়ে দাও! 🏹 —</span>
+      </p>
+    </div>
+
+    <!-- 2. RETRO 'LOVE' MODAL WINDOW -->
+    <div id="modalWindow" class="proposal-modal w-[310px] sm:w-[345px] bg-[#fffdfa] pixel-border rounded-xl pixel-shadow-lg overflow-hidden flex flex-col absolute z-20">
+      
+      <!-- Top Title Bar -->
+      <div class="bg-[#ff6584] px-3.5 py-2 border-b-[3.5px] border-[#2c1e22] flex items-center justify-between">
+        <div class="flex items-center gap-1.5">
+          <span class="text-white text-xs">♡</span>
+          <span class="font-pixel text-[10px] text-white tracking-widest font-bold">LOVE</span>
+        </div>
+        
+        <!-- Pixel 'X' Reset Button -->
+        <button id="closeBtn" title="Reset and replay" class="w-4 h-4 bg-white hover:bg-rose-100 border-[1.5px] border-[#2c1e22] flex items-center justify-center cursor-pointer active:translate-y-0.5">
+          <span class="font-pixel text-[8px] text-[#2c1e22] font-black leading-none">✕</span>
+        </button>
+      </div>
+
+      <!-- Window Body Content -->
+      <div class="p-5 flex flex-col items-center text-center bg-gradient-to-b from-[#ffffff] to-[#fff2f5]">
+        
+        <!-- Proposal Question -->
+        <h2 id="msgQuestion" class="font-bold text-[#2c1e22] text-[17px] sm:text-[18px] leading-snug px-1">
+          জীবন তোর সাথে দেখা করবে
+        </h2>
+
+        <!-- Pixel Kitten Mascot Holding Beating Heart -->
+        <div class="relative w-28 h-24 my-2.5 flex items-center justify-center animate-cat-idle">
+          <svg class="w-24 h-24 drop-shadow-md" viewBox="0 0 100 100">
+            <!-- Ears with Pink Insides -->
+            <polygon points="18,36 32,14 44,36" fill="#241d20" stroke="#161214" stroke-width="1.5"/>
+            <polygon points="56,36 68,14 82,36" fill="#241d20" stroke="#161214" stroke-width="1.5"/>
+            <polygon points="24,34 32,21 40,34" fill="#ff99b0"/>
+            <polygon points="60,34 68,21 76,34" fill="#ff99b0"/>
+            
+            <!-- Head & Body -->
+            <rect x="18" y="32" width="64" height="48" rx="14" fill="#241d20" stroke="#161214" stroke-width="1.5"/>
+            
+            <!-- Eyes (Blinking / Lively) -->
+            <circle cx="34" cy="48" r="4.5" fill="#ffffff"/>
+            <circle cx="35" cy="47" r="1.8" fill="#1b1618"/>
+            <circle cx="66" cy="48" r="4.5" fill="#ffffff"/>
+            <circle cx="65" cy="47" r="1.8" fill="#1b1618"/>
+            
+            <!-- Blush Cheeks -->
+            <rect x="24" y="55" width="8" height="4" rx="2" fill="#ff85a1"/>
+            <rect x="68" y="55" width="8" height="4" rx="2" fill="#ff85a1"/>
+            
+            <!-- Whiskers -->
+            <line x1="12" y1="52" x2="22" y2="53" stroke="#ffdce4" stroke-width="2" stroke-linecap="round"/>
+            <line x1="12" y1="58" x2="22" y2="57" stroke="#ffdce4" stroke-width="2" stroke-linecap="round"/>
+            <line x1="88" y1="52" x2="78" y2="53" stroke="#ffdce4" stroke-width="2" stroke-linecap="round"/>
+            <line x1="88" y1="58" x2="78" y2="57" stroke="#ffdce4" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+
+          <!-- Beating Pink Pixel Heart held by cat -->
+          <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+            <div class="w-8 h-7 bg-[#ff4d79] pixel-heart cat-heart-pulse drop-shadow-md"></div>
+            <!-- Paws -->
+            <div class="absolute -top-1 -left-1.5 w-3 h-2.5 bg-[#241d20] rounded-full border border-black/30"></div>
+            <div class="absolute -top-1 -right-1.5 w-3 h-2.5 bg-[#241d20] rounded-full border border-black/30"></div>
+          </div>
+        </div>
+
+        <!-- Buttons Row -->
+        <div id="btnContainer" class="w-full relative h-14 flex items-center justify-center gap-3 mt-1">
+          <!-- YES -->
+          <button id="btnYes" class="font-bold text-[13px] text-white bg-[#ff5a86] hover:bg-[#eb4371] active:translate-y-0.5 pixel-border pixel-shadow-sm px-5 py-2 rounded-md transition-all cursor-pointer flex items-center gap-1.5 z-10">
+            <span>হ্যাঁ (Yes)</span>
+            <span class="text-xs">❤</span>
+          </button>
+
+          <!-- NO (Dodges playfully) -->
+          <button id="btnNo" class="font-bold text-[13px] text-[#4b353b] bg-[#ece6e2] hover:bg-[#ded5d0] pixel-border pixel-shadow-sm px-4 py-2 rounded-md transition-transform duration-150 cursor-pointer z-10 whitespace-nowrap">
+            না (No)
+          </button>
+        </div>
+
+        <div id="loveFooterMsg" class="hidden text-xs font-bold text-[#e83a63] mt-2 animate-bounce">
+          দেখা হচ্ছে খুব শীঘ্রই! ✨💖
+        </div>
+
+      </div>
+
+      <!-- Bottom Retro Status Bar -->
+      <div class="bg-[#fcf0f3] border-t-2 border-[#2c1e22] px-3.5 py-1.5 flex justify-between items-center text-[10px] text-[#87656e] font-semibold">
+        <span id="statusText">অপেক্ষায় আছি...</span>
+        <span class="font-pixel text-[8px]">100%</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Audio Synthesis & Interaction Logic -->
+  <script>
+    // 1. Web Audio API Synthesis
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function ensureAudio() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playSound(type) {
+      try {
+        ensureAudio();
+        const now = audioCtx.currentTime;
+
+        if (type === 'pull') {
+          // Low tension notch
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.linearRampToValueAtTime(190, now + 0.08);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'shoot') {
+          // Bow release twang
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(450, now);
+          osc.frequency.exponentialRampToValueAtTime(130, now + 0.18);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.18);
+        } else if (type === 'hit') {
+          // Pop impact
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(820, now + 0.16);
+          gain.gain.setValueAtTime(0.28, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.22);
+        } else if (type === 'dodge') {
+          // Squeak sound
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(280, now);
+          osc.frequency.linearRampToValueAtTime(200, now + 0.08);
+          gain.gain.setValueAtTime(0.07, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'win') {
+          // Romantic harp-like arpeggio: C5, E5, G5, C6
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.11);
+            gain.gain.setValueAtTime(0.2, now + idx * 0.11);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.11 + 0.38);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + idx * 0.11);
+            osc.stop(now + idx * 0.11 + 0.4);
+          });
+        }
+      } catch (e) {}
+    }
+
+    // 2. Ambient Floating Background Hearts
+    const bgContainer = document.getElementById('bgHeartsContainer');
+    const heartColors = ['#ff8ca8', '#ffaac1', '#ff5a86', '#fca3b9'];
+    for (let i = 0; i < 22; i++) {
+      const h = document.createElement('div');
+      h.className = 'bg-heart-particle pixel-heart';
+      const size = Math.floor(Math.random() * 12) + 12;
+      h.style.width = size + 'px';
+      h.style.height = size + 'px';
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.backgroundColor = heartColors[Math.floor(Math.random() * heartColors.length)];
+      h.style.animationDuration = (5 + Math.random() * 5).toFixed(1) + 's';
+      h.style.animationDelay = (Math.random() * 6).toFixed(1) + 's';
+      bgContainer.appendChild(h);
+    }
+
+    // 3. Bow & Arrow Drag and Shoot Logic
+    const bowRig = document.getElementById('bowRig');
+    const arrowWrapper = document.getElementById('arrowWrapper');
+    const bowStringPath = document.getElementById('bowStringPath');
+    const sealHeart = document.getElementById('sealHeart');
+    const gameStage = document.getElementById('gameStage');
+    const modalWindow = document.getElementById('modalWindow');
+    const pullGuide = document.getElementById('pullGuide');
+    const closeBtn = document.getElementById('closeBtn');
+
+    let isDrawing = false;
+    let startY = 0;
+    let pullDistance = 0;
+    const maxPull = 75; // Maximum pull down distance in px
+    const fireThreshold = 25; // Pull required to fire
+
+    function onPointerDown(e) {
+      if (modalWindow.classList.contains('is-open')) return;
+      isDrawing = true;
+      startY = e.clientY || (e.touches && e.touches[0].clientY);
+      pullGuide.style.opacity = '0';
+      playSound('pull');
+
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('touchmove', onPointerMove, { passive: false });
+      window.addEventListener('touchend', onPointerUp);
+    }
+
+    function onPointerMove(e) {
+      if (!isDrawing) return;
+      if (e.cancelable) e.preventDefault();
+      const currentY = e.clientY || (e.touches && e.touches[0].clientY);
+      let diff = currentY - startY;
+
+      // Restrict pull downwards
+      if (diff < 0) diff = 0;
+      if (diff > maxPull) diff = maxPull;
+
+      pullDistance = diff;
+
+      // Move arrow with drag
+      arrowWrapper.style.transform = `translateY(${pullDistance}px)`;
+
+      // Curve bowstring SVG
+      const stringY = 32 + pullDistance * 0.8;
+      bowStringPath.setAttribute('d', `M 12,32 Q 60,${stringY} 108,32`);
+    }
+
+    function onPointerUp() {
+      if (!isDrawing) return;
+      isDrawing = false;
+
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('touchmove', onPointerMove);
+      window.removeEventListener('touchend', onPointerUp);
+
+      // Snap string back
+      bowStringPath.setAttribute('d', 'M 12,32 Q 60,32 108,32');
+
+      if (pullDistance >= fireThreshold) {
+        // SHOOT ARROW STRAIGHT INTO THE ENVELOPE'S WAX SEAL!
+        playSound('shoot');
+        
+        arrowWrapper.style.transition = 'transform 0.24s cubic-bezier(0.2, 0.8, 0.4, 1)';
+        arrowWrapper.style.transform = 'translateY(-208px) scale(0.9)';
+
+        // Arrow hits the wax heart seal
+        setTimeout(() => {
+          playSound('hit');
+          sealHeart.classList.add('seal-impact');
+          spawnHitSparkles();
+        }, 210);
+
+        // Transition smoothly to Retro Love Window
+        setTimeout(() => {
+          gameStage.style.opacity = '0';
+          gameStage.style.transform = 'scale(0.85)';
+          
+          setTimeout(() => {
+            gameStage.classList.add('hidden');
+            modalWindow.classList.add('is-open');
+          }, 240);
+        }, 460);
+
+      } else {
+        // Return back if pull was inadequate
+        arrowWrapper.style.transition = 'transform 0.15s ease-out';
+        arrowWrapper.style.transform = 'translateY(0px)';
+        pullGuide.style.opacity = '1';
+        setTimeout(() => {
+          arrowWrapper.style.transition = '';
+        }, 160);
+      }
+
+      pullDistance = 0;
+    }
+
+    bowRig.addEventListener('pointerdown', onPointerDown);
+
+    // Sparkles on seal impact
+    function spawnHitSparkles() {
+      const rect = sealHeart.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 16; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'confetti-heart pixel-heart';
+        spark.style.width = '10px';
+        spark.style.height = '10px';
+        spark.style.backgroundColor = '#ff2a66';
+        spark.style.left = cx + 'px';
+        spark.style.top = cy + 'px';
+
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 35 + Math.random() * 55;
+        spark.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+        spark.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+        spark.style.setProperty('--scale', '0.9');
+
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 1200);
+      }
+    }
+
+    // 4. Modal Window Button Interactions
+    const btnYes = document.getElementById('btnYes');
+    const btnNo = document.getElementById('btnNo');
+    const msgQuestion = document.getElementById('msgQuestion');
+    const loveFooterMsg = document.getElementById('loveFooterMsg');
+    const statusText = document.getElementById('statusText');
+
+    let isAccepted = false;
+    let dodgeCount = 0;
+
+    // NO button playfully jumps away
+    function evadeNo(e) {
+      if (isAccepted) return;
+      if (e) e.preventDefault();
+      playSound('dodge');
+      dodgeCount++;
+
+      const rangeX = 110;
+      const rangeY = 48;
+      const rx = (Math.random() - 0.5) * (rangeX * 2);
+      const ry = (Math.random() - 0.5) * (rangeY * 2);
+
+      const scale = Math.max(0.65, 1 - dodgeCount * 0.05);
+      btnNo.style.transform = `translate(${rx}px, ${ry}px) scale(${scale})`;
+
+      // Enlarge YES button
+      const yesScale = Math.min(1.35, 1 + dodgeCount * 0.06);
+      btnYes.style.transform = `scale(${yesScale})`;
+
+      const teasers = ["ভুল অপশনে চাপ দিস না! 🙈", "না বলা যাবে না! 🥺", "ধরতে পারবি না! ✨", "হ্যাঁ বলতেই হবে! 💕", "না তো হবেই না! 😂"];
+      statusText.innerText = teasers[dodgeCount % teasers.length];
+    }
+
+    btnNo.addEventListener('mouseenter', evadeNo);
+    btnNo.addEventListener('touchstart', evadeNo);
+    btnNo.addEventListener('click', evadeNo);
+
+    // YES button acceptance & celebratory confetti burst
+    btnYes.addEventListener('click', (e) => {
+      if (isAccepted) return;
+      isAccepted = true;
+      playSound('win');
+
+      msgQuestion.innerHTML = `
+        <span class="text-[17px] sm:text-[18px] font-bold text-[#e83a63] block animate-pulse leading-snug">
+          বাল, আমি জানতাম তুই হ্যাঁ-তেই ক্লিক করবি! 😂
+        </span>
+      `;
+
+      btnNo.style.display = 'none';
+      btnYes.style.transform = 'scale(1.1)';
+      loveFooterMsg.classList.remove('hidden');
+      statusText.innerText = 'পাক্কা কথা হলো তাহলে! ♡';
+
+      createCelebrationBurst(e);
+    });
+
+    function createCelebrationBurst(e) {
+      const rect = btnYes.getBoundingClientRect();
+      const originX = rect.left + rect.width / 2;
+      const originY = rect.top + rect.height / 2;
+      const celebrationColors = ['#ff4d79', '#ff6584', '#ffb3c6', '#ff1c54', '#ffd4df', '#ffffff'];
+
+      for (let i = 0; i < 42; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'confetti-heart pixel-heart';
+
+        const size = Math.floor(Math.random() * 14) + 10;
+        heart.style.width = size + 'px';
+        heart.style.height = size + 'px';
+        heart.style.left = originX + 'px';
+        heart.style.top = originY + 'px';
+        heart.style.backgroundColor = celebrationColors[Math.floor(Math.random() * celebrationColors.length)];
+
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 75 + Math.random() * 210;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist - (50 + Math.random() * 80);
+        const tr = (Math.random() - 0.5) * 160;
+
+        heart.style.setProperty('--tx', `${tx}px`);
+        heart.style.setProperty('--ty', `${ty}px`);
+        heart.style.setProperty('--tr', `${tr}deg`);
+        heart.style.setProperty('--scale', (0.8 + Math.random() * 0.7).toString());
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1400);
+      }
+    }
+
+    // 5. Close / Reset button to replay the entire experience
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      modalWindow.classList.remove('is-open');
+
+      setTimeout(() => {
+        gameStage.classList.remove('hidden');
+        gameStage.style.opacity = '1';
+        gameStage.style.transform = 'scale(1)';
+
+        arrowWrapper.style.transition = '';
+        arrowWrapper.style.transform = 'translateY(0px)';
+        sealHeart.classList.remove('seal-impact');
+        pullGuide.style.opacity = '1';
+
+        btnNo.style.display = 'block';
+        btnNo.style.transform = 'none';
+        btnYes.style.transform = 'none';
+        loveFooterMsg.classList.add('hidden');
+        msgQuestion.innerHTML = `জীবন তোর সাথে দেখা করবে`;
+        statusText.innerText = 'অপেক্ষায় আছি...';
+        isAccepted = false;
+        dodgeCount = 0;
+      }, 350);
+    });
+  </script>
+</body>
+</html>
